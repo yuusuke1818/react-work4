@@ -1,13 +1,37 @@
+import axios from "axios";
+import React, { useContext } from "react";
 import { useHistory } from "react-router-dom";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { UserContext } from "../provider/UserProvider";
+import { userState } from "../recoil/userState";
+
+axios.create({
+  auth: {
+    username: "yu-suke18m14",
+    password: "340526"
+  }
+});
 
 export const Top = () => {
   const history = useHistory();
+  // const { setUserInfo } = useContext(UserContext);
+  const [userInfo, setUserInfo] = useRecoilState(userState);
   const onClickAdmin = () => {
-    history.push({ pathname: "/users", state: { isAdmin: true } });
+    setUserInfo({ isAdmin: true });
+    history.push("/users");
   };
   const onClickGenerate = () => {
-    history.push({ pathname: "/users", state: { isAdmin: false } });
+    axios
+      .get("http://jsonplaceholder.typicode.com/users")
+      .then((res) => {
+        console.log(res);
+      })
+      .catch(function (error) {
+        alert(error);
+      });
+    setUserInfo({ isAdmin: false });
+    history.push("/users");
   };
 
   return (

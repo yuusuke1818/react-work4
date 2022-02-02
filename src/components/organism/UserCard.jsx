@@ -1,9 +1,18 @@
+import { memo, useContext } from "react";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { Card } from "../atoms/card/Card";
 import { UserIconWithName } from "../molecules/user/UserIconWithName";
+import { UserContext } from "../provider/UserProvider";
+import { userState } from "../recoil/userState";
 
-export const UserCard = (Props) => {
-  const { user, isAdmin } = Props;
+export const UserCard = memo((props) => {
+  // const { userInfo } = useContext(UserContext);
+  const userInfo = useRecoilValue(userState);
+
+  // console.log(userInfo);
+  const isAdmin = userInfo.isAdmin ? userInfo.isAdmin : false;
+  const { user } = props;
   return (
     <Card>
       <UserIconWithName image={user.image} name={user.name}></UserIconWithName>
@@ -20,7 +29,7 @@ export const UserCard = (Props) => {
       </SDl>
     </Card>
   );
-};
+});
 
 const SDl = styled.dl`
   text-align: left;

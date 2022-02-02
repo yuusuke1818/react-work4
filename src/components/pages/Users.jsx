@@ -1,9 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { SearchInput } from "../molecules/SearchInput";
 import { UserCard } from "../organism/UserCard";
 import { UserContext } from "../provider/UserProvider";
+import { userState } from "../recoil/userState";
 
 const userlist = [...Array(10).keys()].map((val) => {
   return {
@@ -29,26 +31,29 @@ const userlist = [...Array(10).keys()].map((val) => {
 // };
 
 export const Users = () => {
-  const { auth, setAuth } = useState(false);
-  const { state } = useLocation();
-  const context = useContext(UserContext);
-  console.log(context);
+  // const { userInfo, setUserInfo } = useContext(UserContext);
+  const [userInfo, setUserInfo] = useRecoilState(userState);
 
-  const isAdmin = state ? state.isAdmin : false;
+  // const { auth, setAuth } = useState(false);
+  //onst { state } = useLocation();
+  // const context = useContext(userContext);
+  //console.log(context);
 
+  // isAdmin = state ? state.isAdmin : false;
+  const onClickAdmin = () => {
+    const isAdmin = userInfo ? userInfo.isAdmin : false;
+    console.log(isAdmin);
+    setUserInfo({ isAdmin: !isAdmin });
+  };
   return (
     <>
       <SContainer>
         <h2>ユーザ一覧</h2>
         <SearchInput></SearchInput>
+        <button onClick={onClickAdmin}>切り替え</button>
         <SUserArea>
           {userlist.map((user) => (
-            <UserCard
-              key={user.id}
-              user={user}
-              auth={auth}
-              isAdmin={isAdmin}
-            ></UserCard>
+            <UserCard key={user.id} user={user}></UserCard>
           ))}
         </SUserArea>
       </SContainer>
